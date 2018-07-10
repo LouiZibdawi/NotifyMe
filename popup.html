@@ -1,16 +1,13 @@
  <!DOCTYPE html>
     <html>
         <head>
-            <style>
-                button {
-                    height: 30px;
-                    width: 30px;
-                    outline: none;
-                }
-            </style>
+            <script src="popup.js"></script>
         </head>
         <body>
-            <button id="changeColor"></button>
-            <script src="popup.js"></script>
+            <h1>NotifyMe</h1>
+            <p id="enterEmail"> Enter your email for notifications: <br></p>
+            <input type="text" id="emailBox"><br>
+            <button id="submitEmail" onclick="setEmail()">Submit</button>
+            <p id="test"> TEST</p>
         </body>
     </html>
