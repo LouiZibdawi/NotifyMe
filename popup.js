@@ -3,41 +3,71 @@
 // found in the LICENSE file.
 'use strict';
 
-var test = document.getElementById('test')
-test.innerHTML = "hi"
-
-var userEmail;
-checkForEmail()
-
 function checkForEmail() {
-    chrome.storage.sync.get(['email'], function(result) {
+    //Clear Storage by uncommenting next line
+    //chrome.storage.sync.clear()
 
-        if(!chrome.runtime.lastError) {
-            console.log('Value currently is ' + result.key)
-            userEmail = result.key
+    chrome.storage.sync.get('email', function (result) {
+
+        if (!chrome.runtime.error) {
+            if (result.email != null) {
+                console.log('Email currently is ' + result.email)
+
+            }
         }
-        console.log('No value currently set!')
-    })
+        buildPopup(result.email)
+    });
+}
 
-    if(userEmail != null) {
-        var newStr = "Emails will be sent to: <br>" + result.key;
+function buildPopup(userEmail) {
+    var body = document.getElementById('popup')
 
-        document.getElementById('enterEmail').innerHTML = newStr
-        document.getElementById('emailBox').style.visibility = "hidden"
+    //If email exists in storage
+    if(!(userEmail == null)) {
+        var subheader = document.getElementById('subheader')
+        subheader.innerHTML = "Emails will be sent to: " + userEmail
+
+        var emailTextBox = document.getElementById('emailTextBox')
+        emailTextBox.style.visibility = "hidden"
+
+        var submitBtn = document.getElementById('submitEmail')
+        submitBtn.value = "Remove Email"
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+
+    checkForEmail()
+
+    document.getElementById("submitEmail").addEventListener("click", setEmail);
+});
+
 function setEmail() {
-    
-    var test = document.getElementById('test')
-    test.innerHTML = "hi"
+    console.log("PLEASEEEE")
 
-    var email = document.getElementById('emailBox').value
+    var btn = document.getElementById('submitEmail')
 
-    chrome.runtime.onInstalled.addListener(function() {
-        chrome.storage.sync.set[{'email': email}], function(result) {
-            console.log('Value currently is ' + email);
-        });
-  });
+    if(btn.value === "Submit Email") {
+        var newEmail = document.getElementById('emailTextBox').value
+        if(newEmail != null && newEmail != "") {
+            chrome.storage.sync.set({'email': newEmail}, function() {
+                if(chrome.runtime.error) {
+                    console.log("Runtime error")
+                }
+                else {
+                    alert("Set email to " + newEmail)
+                    console.log('User email is set to ' + newEmail)
+                    window.close();
+                }
+            });
+        }
+    }
+    else {
+        removeEmail()
+    }
+}
 
-})
+function removeEmail() {
+    chrome.storage.sync.remove('email', function(result){})
+    window.close();
+}

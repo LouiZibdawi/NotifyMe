@@ -2,7 +2,7 @@
     "name": "NotifyMe",
     "version": "1.0",
     "description": "Add notify me button to course selection",
-    "permissions": ["storage"],
+    "permissions": ["storage", "activeTab"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
